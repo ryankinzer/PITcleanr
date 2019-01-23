@@ -7,7 +7,10 @@
 writeLGRNodeNetwork()
 }
 \description{
-Create data.frame describing all the observation nodes in the Lower Granite dam version of DABOM, including how they are related to one another
+Create data.frame describing all the observation nodes in the
+ Lower Granite dam version of DABOM, including how they are related to one
+ another. Modified on 1-15-19 to include additonal sites and branches for
+ DABOM spawn year 2019
 }
 \examples{
 writeLGRNodeNetwork()
