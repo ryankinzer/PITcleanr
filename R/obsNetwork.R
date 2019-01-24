@@ -6,7 +6,7 @@
 #'
 #' @param parentchild a dataframe containing at least two columns; 1: parent and 2: child for each observation point in the network.
 #'
-#' @import dplyr tidygraph
+#' @import purrr dplyr tidygraph
 #' @export
 #' @return NULL
 #' @examples obsNetwork()
