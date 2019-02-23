@@ -57,12 +57,13 @@ createParentChildDf = function(sites_df,
                                       distinct(),
                                     .,
                                     by = c('SiteID', 'Node'))) %>%
-                mutate(site = stringr::str_replace(Node, 'A0$', ''),
-                       site = stringr::str_replace(site, 'B0$', '')) %>%
-                group_by(Node, site) %>%
-                filter(RKMTotal == min(RKMTotal)) %>%
-                ungroup(),
-              by = c('site')) %>%
+                # mutate(site = stringr::str_replace(Node, 'A0$', ''),
+                #        site = stringr::str_replace(site, 'B0$', '')) %>%
+                # group_by(Node, site) %>%
+                # filter(RKMTotal == min(RKMTotal)) %>%
+                # ungroup(),
+                distinct(),
+              by = c('site' = 'SiteID')) %>%
     arrange(EndSite, stepOrder, desc(Node)) %>%
     group_by(EndSite) %>%
     mutate(nodeOrder = 1:n()) %>%
@@ -72,7 +73,7 @@ createParentChildDf = function(sites_df,
     group_by(EndSite) %>%
     mutate(nodeOrder = 1:n()) %>%
     ungroup() %>%
-    select(EndSite, NodeSite = site, SiteID, SiteType, Node, nodeOrder, matches('RKM'), path)
+    select(EndSite, NodeSite = site, SiteID = site, SiteType, Node, nodeOrder, matches('RKM'), path)
 
   parent_child = node_df %>%
     group_by(EndSite) %>%
@@ -102,6 +103,60 @@ createParentChildDf = function(sites_df,
     filter(RKMTotal == max(RKMTotal)) %>%
     slice(1) %>%
     ungroup()
+
+  # node_df <- sites_df %>%
+  #   rename(EndSite = SiteID) %>%
+  #   tidyr::gather(stepOrder, site, matches('Step')) %>%
+  #   mutate(stepOrder = stringr::str_replace(stepOrder, '^Step', ''),
+  #          stepOrder = as.integer(stepOrder)) %>%
+  #   arrange(EndSite, stepOrder) %>%
+  #   filter(site != '',
+  #          site %in% c(root_site, as.character(sites_df$SiteID))) %>%
+  #   group_by(EndSite) %>%
+  #   mutate(stepOrder = 1:n()) %>%
+  #   left_join(select(site_df, SiteID, Step2, Step3) %>%
+  #               rename(Region = Step2, Branch = Step3),
+  #             by = c('EndSite' = 'SiteID'))
+  #
+  #
+  # config_df <- my_config %>%
+  #   filter(EndDate > lubridate::ymd(startDate) | is.na(EndDate)) %>%
+  #   filter(StartDate < lubridate::ymd(startDate) | is.na(StartDate)) %>%
+  #   select(SiteID, Node, SiteType, matches('RKM')) %>%
+  #   distinct()
+  #
+  # parent_child <- inner_join(node_df, config_df, by = c('site' = 'SiteID')) %>%
+  #   arrange(EndSite, stepOrder, desc(Node)) %>%
+  #   group_by(EndSite) %>%
+  #   mutate(nodeOrder = 1:n()) %>%
+  #   select(EndSite, NodeSite = Node, SiteID = site, SiteType, nodeOrder, matches('RKM'), path, Region, Branch) %>%
+  #   group_by(EndSite) %>%
+  #   mutate(prevNode = lag(NodeSite)) %>%
+  #   ungroup() %>%
+  #   filter(!is.na(prevNode)) %>%
+  #   select(ParentNode = prevNode,
+  #          ChildNode = NodeSite,
+  #          SiteType, matches('RKM'),
+  #          nodeOrder, Region, Branch) %>%
+  #   bind_rows(tibble(ParentNode = root_site,
+  #                    ChildNode = root_site,
+  #                    nodeOrder = 1) %>%
+  #               left_join(configuration %>%
+  #                           filter(SiteID == root_site) %>%
+  #                           select(ChildNode = SiteID,
+  #                                  SiteType, matches('RKM')) %>%
+  #                           distinct(),
+  #                         by = 'ChildNode')) %>%
+  #   distinct() %>%
+  #   # arrange mosty by RKM
+  #   mutate(initParent = ifelse(ChildNode == root_site, 'A',
+  #                              ifelse(ParentNode == root_site, 'B', 'C'))) %>%
+  #   arrange(initParent, RKM) %>%
+  #   select(-initParent) %>%
+  #   group_by(ChildNode) %>%
+  #   filter(RKMTotal == max(RKMTotal)) %>%
+  #   slice(1) %>%
+  #   ungroup()
 
   return(parent_child)
 }
