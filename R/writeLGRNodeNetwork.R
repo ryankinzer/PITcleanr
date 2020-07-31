@@ -102,6 +102,7 @@ writeLGRNodeNetwork = function() {
                                    list('WR1' =
                                           list('WR1',
                                                'BCANF',
+                                               'MR1',
                                                'WR2' =
                                                  list('WR2',
                                                       'LOSTIW',
@@ -125,6 +126,7 @@ writeLGRNodeNetwork = function() {
                                                    'HORS3C',
                                                    'IR3' =
                                                      list('IR3',
+                                                          'GCM',
                                                           'CZY',
                                                           'FREEZC',
                                                           'MAHOGC',
@@ -159,6 +161,7 @@ writeLGRNodeNetwork = function() {
                                 list('TAY' =
                                        list('TAY',
                                             'BIG2C')),
+                              'MarshCreek' = list('MAR'),
                               'Panther' = list('PCA'),
                               'NFSalmon' =
                                 list('NFS'),
